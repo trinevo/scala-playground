@@ -9,7 +9,7 @@ object SparkMain {
   var cnt : Option[Int] = None
 
   def main(args: Array[String]) : Unit = {
-    for(i <- 0 until args.length) {
+    for(i <- args.indices) {
       i match {
         case 0 => cmd = Some(args(i))
         case 1 => fname = Some(args(i))
@@ -20,7 +20,9 @@ object SparkMain {
     if(cmd.isDefined) {
       println(s"Executing command ${cmd.get}")
       cmd.get match {
-        case "gen" => new CSVGenerator().generate(fname.get, cnt.get.toInt)
+        case "gen" => new CSVGenerator().generate(fname.get, cnt.get)
+        case "save-to-avro" => new AvroController().save(fname.get)
+        case _ => println("gen|save-to-avro")
       }
     } else println("Gimme the command, fucker!")
   }
