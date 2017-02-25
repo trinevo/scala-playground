@@ -9,7 +9,6 @@
     <version>1.0-SNAPSHOT</version>
 
     <build>
-        <sourceDirectory>src/main/scala</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.scala-tools</groupId>
@@ -19,12 +18,31 @@
                     <execution>
                         <goals>
                             <goal>compile</goal>
-                            <goal>testCompile</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
                     <sourceDir>src/main/scala</sourceDir>
+                    <scalaVersion>2.11.8</scalaVersion>
+                    <jvmArgs>
+                        <jvmArg>-Xms64m</jvmArg>
+                        <jvmArg>-Xmx1024m</jvmArg>
+                    </jvmArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sourceDir>src/main/java</sourceDir>
                     <scalaVersion>2.11.8</scalaVersion>
                     <jvmArgs>
                         <jvmArg>-Xms64m</jvmArg>

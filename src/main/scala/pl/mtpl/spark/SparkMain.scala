@@ -21,7 +21,7 @@ object SparkMain {
       println(s"Executing command ${cmd.get}")
       cmd.get match {
         case "gen" => new CSVGenerator().generate(fname.get, cnt.get)
-        case "save-to-avro" => new AvroController().save(fname.get)
+        case "save-to-avro" => new AvroController().save(fname.get, cnt.get)
         case "load-from-avro" => new AvroController().load(fname.get)
         case _ => println("gen|save-to-avro|load-from-avro")
       }

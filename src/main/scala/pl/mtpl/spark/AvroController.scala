@@ -3,7 +3,7 @@ package pl.mtpl.spark
 import org.apache.spark.rdd.RDD
 import com.databricks.spark.avro._
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
-import org.apache.spark.sql.{Row, SaveMode, SparkSession}
+import org.apache.spark.sql.{Column, Row, SaveMode, SparkSession}
 
 /**
   * Created by MarcinT.P on 2017-02-25.
@@ -29,7 +29,7 @@ class AvroController() {
       .getOrCreate()
   }
 
-  def save(csvFileName: String) : Unit = {
+  def save(csvFileName: String, numberContained: Int) : Unit = {
 
     val ss : SparkSession = getSession
     val rowRDD: RDD[Row] = loadRDD(ss, csvFileName)
@@ -42,6 +42,7 @@ class AvroController() {
 
     // Apply the schema to the RDD
     val peopleDF = ss.sqlContext.createDataFrame(rowRDD, schema)
+      .filter(new Column("Name").contains(numberContained))
     peopleDF.show(10)
     //val dst: String = s"${sys.env("TEMP")}/${csvFileName}avro"
     val dst: String = s"${csvFileName}avro"
