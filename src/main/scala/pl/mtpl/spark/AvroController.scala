@@ -23,13 +23,16 @@ class AvroController() {
       )
   }
 
-  def save(csvFileName: String) : Unit = {
-
-    val session: SparkSession = SparkSession.builder()
+  def getSession : SparkSession = {
+    SparkSession.builder()
       .appName("Avro Persister")
       .getOrCreate()
+  }
 
-    val rowRDD: RDD[Row] = loadRDD(session, csvFileName)
+  def save(csvFileName: String) : Unit = {
+
+    val ss : SparkSession = getSession
+    val rowRDD: RDD[Row] = loadRDD(ss, csvFileName)
 
     // Generate the schema based on the string of schema
     val schema = StructType("no name surname is_male age"
@@ -38,12 +41,21 @@ class AvroController() {
     )
 
     // Apply the schema to the RDD
-    val peopleDF = session.sqlContext.createDataFrame(rowRDD, schema)
+    val peopleDF = ss.sqlContext.createDataFrame(rowRDD, schema)
     peopleDF.show(10)
     //val dst: String = s"${sys.env("TEMP")}/${csvFileName}avro"
     val dst: String = s"${csvFileName}avro"
     println(s"Writing via avro to $dst")
     peopleDF.write.mode(SaveMode.Overwrite).avro(dst)
-    session.close()
+    ss.close()
+  }
+
+  def load(csvFileName: String) : Unit = {
+    val src: String = s"${csvFileName}avro"
+    println(s"Reading via avro from $src")
+    val ss : SparkSession = getSession
+    ss
+      .read.avro(src)
+      .show(10)
   }
 }
